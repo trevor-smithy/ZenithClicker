@@ -106,6 +106,30 @@ ModData = {
         AS = "ILL-NATURED, TENEBRIOUS, LIFE-DRAINING MAGIC CLASPS THY SOUL...",
         DP = "WHAT ONCE WAS INTERTWINED NOW NEVER TO COEXIST",
     },
+    -- Trevor Smithy
+    easyName = {
+        EX = "< EASY MODE >",
+        NH = "< LESS HOLD >",
+        MS = "< MINOR MIXUP >",
+        GV = "< FLOAT >",
+        VL = "< SENSITIVITY >",
+        DH = "< PATCHED HOLE >",
+        IN = "< VISIBLE >",
+        AS = "< SPIN >",
+        DP = "< FRIEND >",
+    },
+    easyDesc = {
+        EX = "A MORE LENIENT CHALLENGE",
+        NH = "CANCELING IS DIFFICULT",
+        MS = "SHUFFLES SOME CARDS",
+        GV = "AUTO COMMITS OCCUR",
+        VL = "LARGER GAPS BETWEEN CARDS",
+        DH = "COMBO DIFFICULTY IS DECREASED",
+        IN = "CARDS ARE FACED DOWN AND ARE HIGHLIGHTED",
+        AS = "ENABLE KEYBOARD CONTROLS",
+        DP = "FLOOD THE TOWER WITH AN IMAGINARY FRIEND",
+    },
+    --
     ultraImpactTone = {
         EX = { 0, nil, 0 }, -- 6 6
         NH = { 0, 5 },      -- 5 2
@@ -172,6 +196,16 @@ ModData = {
         rIN = "BELIEVED",
         rAS = "OMNI-SPIN",
         rDP = "PIERCING",
+        -- Trevor Smithy
+        eEX = "EASY"
+        eNH = "LESSENED"
+        eMS = "MIXED"
+        eGV = "FLOATED"
+        eVL = "SENSITIVE"
+        eDH = "PATCHED"
+        eIN = "VISIBLE"
+        eAS = "SPUN"
+        eDP = "FRIENDLY"
     },
     noun = {
         EX = "EXPERT",
@@ -192,6 +226,16 @@ ModData = {
         rIN = "BELIEF",
         rAS = "OMNI-SPIN",
         rDP = "HEARTACHE",
+        -- Trevor Smithy
+        eEX = "EASY"
+        eNH = "LESS HOLD"
+        eMS = "MIXUP"
+        eGV = "FLOAT"
+        eVL = "SENSITIVITY"
+        eDH = "PATCHED HOLE"
+        eIN = "VISIBLITY"
+        eAS = "SPIN"
+        eDP = "FRIEND"
     },
 }
 
@@ -647,6 +691,15 @@ PieceData = {
     { id = 'invisUI',   text = { COLOR.lM, "T", }, popup = { COLOR.lM, "T - Invisible UI" } },
     { id = 'invisCard', text = { COLOR.lY, "O", }, popup = { COLOR.lY, "O - Invisible Card" } },
     { id = 'closeCard', text = { COLOR.lC, "I", }, popup = { COLOR.lC, "I - Close Card" } },
+    -- Trevor Smithy
+    { id = 'enightcore', text = { COLOR.lR, "eZ", }, popup = { COLOR.lR, "eZ - Nightcore+" } },
+    { id = 'eslowmo',    text = { COLOR.lG, "eS", }, popup = { COLOR.lG, "eS - Slow-mo+" } },
+    { id = 'eglassCard', text = { COLOR.lB, "eJ", }, popup = { COLOR.lB, "eJ - Glass Card" } },
+    { id = 'efastLeak',  text = { COLOR.lO, "eL", }, popup = { COLOR.lO, "eL - Slow Leak" } },
+    { id = 'einvisUI',   text = { COLOR.lM, "eT", }, popup = { COLOR.lM, "eT - Transparent UI" } },
+    { id = 'einvisCard', text = { COLOR.lY, "eO", }, popup = { COLOR.lY, "eO - Transparent Card" } },
+    { id = 'ecloseCard', text = { COLOR.lC, "eI", }, popup = { COLOR.lC, "eI - Closer Card" } },
+    --
     { id = 'allclear',  text = { COLOR.LL, "-", }, popup = { COLOR.LL, "All Clear" } },
 }
 
@@ -1113,6 +1166,27 @@ Fatigue = {
         { time = 440, event = { 'dmgTimerMul', -.02 } },
         { time = 1e99 }, -- Total: dmgTimerMul-90%, Cycle-1.5, Wrong+5
     },
+    -- Trevor Smithy
+    eEX = { time = 90,  event = { 'extraQuestBase', .2, 'animDuration', .5 } },
+        { time = 180, event = { 'extraQuestBase', .2, 'animDuration', .5 } },
+        { time = 240, event = { 'extraQuestBase', .2, 'animDuration', 1 } },
+        { time = 360, event = { 'dmgTimerMul', -.1, 'animDuration', 1 },                   text = "FATIGUE SETS IN_",          desc = "TimerSpeed++" },
+        { time = 390, event = { 'dmgCycle', -.5, 'dmgWrong', 1 },                          text = "YOUR BODY GROWS WEAK_",     desc = "DmgCycle--   Damage++" },
+        { time = 420, event = { 'dmgTimerMul', -.1, 'dmgHeal', -1, 'animDuration', 1 },    text = "ALL SENSES BLUR TOGETHER_", desc = "TimerSpeed++   Heal--" },
+        { time = 450, event = { 'dmgTimerMul', -.1, 'dmgWrong', 1 },                       text = "YOUR CONSCIOUSNESS FADES_", desc = "TimerSpeed++   Damage++" },
+        { time = 480, event = { 'dmgTimerMul', -.05, 'dmgCycle', -.5, 'animDuration', 1 }, text = "THIS IS THE END.",          desc = "TimerSpeed++   DmgCycle--", final = true },
+        { time = 482, event = { 'dmgTimerMul', -.05 } },
+        { time = 485, event = { 'dmgTimerMul', -.05 } },
+        { time = 490, event = { 'dmgTimerMul', -.05 } },
+        { time = 540, event = { 'atkBufferCap', 6, 'animDuration', 1, 'maxQuestSize', 1 }, text = "FAREWELL.",                 desc = "QuestDifficulty++++++",     duration = 26, color = 'lB', },
+        { time = 545, event = { 'atkBufferCap', 6, 'animDuration', 3, 'extraQuestVar', 1 } },
+        { time = 550, event = { 'atkBufferCap', 6, 'animDuration', 5 } },
+        { time = 570, event = { 'animDuration', 11 }, --[[26]]                             text = "" },
+        { time = 600, event = { 'animDuration', 16 }, --[[42]]                             text = "" },
+        { time = 630, event = { 'animDuration', 20 }, --[[62]]                             text = "" },
+        { time = 660, event = { 'animDuration', 64 }, --[[126]]                            text = "" },
+        { time = 1e99 }, -- Total: dmgTimerMul-50%, Cycle-1, Wrong+2
+    --
     rDP = {
         { time = 20,  event = { 'dmgHeal', -1 }, --[[ 2 ]]                       text = "YOUR PASSION FADES_",                        desc = "Heal-",          duration = 10 },
         { time = 40,  event = { 'dmgHeal', -.5 }, --[[ 1.5 ]]                    text = "THEIR REPLIES BECOME LESS ENGAGED_",         desc = "Heal--",         duration = 10 },
@@ -1135,6 +1209,39 @@ Fatigue = {
         { time = 320, event = { 'reviveDifficulty', 9999 },                      text = "GOODBYE.",                                   desc = "NO REVIVE",      duration = 10, color = 'R' },
         { time = 360, event = { 'dmgHeal', 1, 'animDuration', 1 }, --[[ 1.5 ]]   text = "\"I MISS YOU\"",                             desc = "Heal+++",        duration = 10, color = 'lO' },
         { time = 380, event = { 'dmgHeal', 1 }, --[[ 2.5 ]]                      text = "MAYBE IT CAN STILL WORK_?",                  desc = "Heal+",          duration = 10, color = 'lO' },
+        { time = 400, event = { 'dmgTimerMul', -.1, 'animDuration', 4 },         text = "GOODBYE.",                                   desc = "TimerSpeed++++", duration = 10, final = true },
+        { time = 402, event = { 'dmgTimerMul', -.1 } },
+        { time = 405, event = { 'dmgTimerMul', -.1 } },
+        { time = 408, event = { 'dmgTimerMul', -.05 } },
+        { time = 412, event = { 'dmgTimerMul', -.05 } },
+        { time = 416, event = { 'dmgTimerMul', -.05 } },
+        { time = 420, event = { 'dmgTimerMul', -.03 } },
+        { time = 425, event = { 'dmgTimerMul', -.02 } },
+        { time = 1e99 }, -- Total: dmgTimerMul-70%
+    },
+    -- Trevor Smithy #TODO fix text
+    eDP = {
+        { time = 20,  event = { 'dmgHeal', -0.5 }, --[[ 2 ]]                       text = "YOUR PASSION FADES_",                        desc = "Heal-",          duration = 10 },
+        { time = 40,  event = { 'dmgHeal', -.25 }, --[[ 1.5 ]]                    text = "THEIR REPLIES BECOME LESS ENGAGED_",         desc = "Heal--",         duration = 10 },
+        { time = 60,  event = { 'dmgHeal', -.25, 'animDuration', .5 }, --[[ 1 ]]  text = "YOU FEEL NEGLECTED_",                        desc = "Heal---",        duration = 10 },
+        { time = 80,  event = { 'dmgHeal', 1 }, --[[ 2 ]]                        text = "THINGS ARE BACK TO HOW THEY USED TO BE_!",   desc = "Heal+++",          duration = 10, color = 'lO' },
+        { time = 90,  event = { 'extraQuestBase', .2 } },
+        { time = 100, event = { 'dmgHeal', 1 }, --[[ 3 ]]                        text = "THINGS ARE BETTER THAN EVER_!",              desc = "Heal+++",        duration = 10, color = 'lO' },
+        { time = 120, event = { 'dmgHeal', -0.5, 'animDuration', .5 }, --[[ 2 ]]   text = "MINOR ISSUES BECOME LARGE CONFLICTS_",       desc = "Heal--",         duration = 10 },
+        { time = 140, event = { 'dmgHeal', -0.5 }, --[[ 1 ]]                       text = "YOU BLAME THEM FOR YOUR OWN PROBLEMS_",      desc = "Heal---",        duration = 10 },
+        { time = 160, event = { 'reviveDifficulty', 2 },                         text = "THEY WOULD RATHER SPEND TIME ALONE_",        desc = "Revive++",       duration = 10 },
+        { time = 180, event = { 'extraQuestBase', .2 } },
+        { time = 180, event = { 'dmgHeal', 1.5, 'animDuration', 1 }, --[[ 2.5 ]] text = "YOU PROMISE TO CHANGE_",                     desc = "Heal++",         duration = 10, color = 'lO' },
+        { time = 200, event = { 'dmgTimerMul', -.2 },                            text = "PROMISES ARE BROKEN_",                       desc = "TimerSpeed++",   duration = 10 },
+        { time = 220, event = { 'dmgHeal', -.25 }, --[[ 2 ]]                      text = "CONVERSATIONS DEVOLVE TO SHOUTING MATCHES_", desc = "Heal---",        duration = 10 },
+        { time = 240, event = { 'extraQuestBase', .2, 'animDuration', 1 } },
+        { time = 240, event = { 'dmgHeal', -.25 }, --[[ 1.5 ]]                    text = "ALL TRUST HAS WITHERED AWAY_",               desc = "Heal--",         duration = 10 },
+        { time = 260, event = { 'dmgHeal', -.25 }, --[[ 1 ]]                      text = "THEY SET AN ULTIMATUM_",                     desc = "Heal--",         duration = 10 },
+        { time = 280, event = { 'dmgHeal', -.25 }, --[[ .5 ]]                     text = "YOU CAN'T BE BOTHERED ANYMORE_",             desc = "Heal--",         duration = 10 },
+        { time = 300, event = { 'dmgWrong', 1, 'animDuration', 1 },              text = "ONE LAST PAINFUL ARGUMENT_",                 desc = "Dmg+",           duration = 10 },
+        { time = 320, event = { 'reviveDifficulty', 9999 },                      text = "GOODBYE.",                                   desc = "NO REVIVE",      duration = 10, color = 'R' },
+        { time = 360, event = { 'dmgHeal', 2, 'animDuration', 1 }, --[[ 1.5 ]]   text = "\"I MISS YOU\"",                             desc = "Heal+++",        duration = 10, color = 'lO' },
+        { time = 380, event = { 'dmgHeal', 2 }, --[[ 2.5 ]]                      text = "MAYBE IT CAN STILL WORK_?",                  desc = "Heal+",          duration = 10, color = 'lO' },
         { time = 400, event = { 'dmgTimerMul', -.1, 'animDuration', 4 },         text = "GOODBYE.",                                   desc = "TimerSpeed++++", duration = 10, final = true },
         { time = 402, event = { 'dmgTimerMul', -.1 } },
         { time = 405, event = { 'dmgTimerMul', -.1 } },
