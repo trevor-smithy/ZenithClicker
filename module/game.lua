@@ -250,6 +250,18 @@ function GAME.getHand(real)
         if M.IN > 0 then ins(list, M.IN == 1 and 'IN' or 'rIN') end
         if M.AS > 0 then ins(list, M.AS == 1 and 'AS' or 'rAS') end
         if M.DP > 0 then ins(list, M.DP == 1 and 'DP' or 'rDP') end
+        -- Trevor Smithy
+        if M.EX == -1 then ins(list, 'eEX') end
+        if M.NH == -1 then ins(list, 'eNH') end
+        if M.MS == -1 then ins(list, 'eMS') end
+        if M.GV == -1 then ins(list, 'eGV') end
+        if M.VL == -1 then ins(list, 'eVL') end
+        if M.DH == -1 then ins(list, 'eDH') end
+        if M.IN == -1 then ins(list, 'eIN') end
+        if M.AS == -1 then ins(list, 'eAS') end
+        if M.DP == -1 then ins(list, 'eDP') end
+        --
+
         -- for i = 1, #MD.deck do
         --     local D = MD.deck[i]
         --     local level = M[D.id]
@@ -1246,14 +1258,14 @@ function GAME.refreshModIcon()
     local hand = GAME.getHand(true)
     table.sort(hand, modIconSorter)
     local quad, w, _
-    if #hand == 1 then
+    if #hand == 1 then --if one mod
         quad = URM and TEXTURE.modQuad_ultra[hand[1]] or TEXTURE.modQuad_ig[hand[1]]
         _, _, w = quad:getViewport()
         GAME.modIB:add(
             quad, 0, 0,
             0, .62, nil, w * .5, w * .5
         )
-    elseif #hand == 2 then
+    elseif #hand == 2 then --if two mods
         quad = URM and TEXTURE.modQuad_ultra[hand[2]] or TEXTURE.modQuad_ig[hand[2]]
         _, _, w = quad:getViewport()
         GAME.modIB:add(
@@ -1266,7 +1278,7 @@ function GAME.refreshModIcon()
             quad, -35, 0,
             0, .5, nil, w * .5, w * .5
         )
-    else
+    else --if 3+ mods
         local r = 35
         for x = 3, 2, -1 do
             for i = #hand, 1, -1 do
@@ -1350,7 +1362,15 @@ function GAME.refreshCurrentCombo()
 end
 
 function GAME.refreshLayout()
-    local baseDist = 110 + (M.EX > 0 and (URM and M.EX == 2 and -30 or -10) or 0) + M.VL * 20 + (GAME.closeCard and -30 or 0)
+    -- Trevor Smithy
+    local mvl
+    if M.VL == -1 then
+        mvl = 1
+    else
+        mvl = M.VL
+    end
+    local baseDist = 110 + (M.EX > 0 and (URM and M.EX == 2 and -30 or -10) or 0) + mvl * 20 + (GAME.closeCard and -30 or GAME.ecloseCard and -50 or 0)
+    --
     local baseL, baseR = 800 - 4 * baseDist - 70, 800 + 4 * baseDist + 70
     local baseY = 726 + (URM and M.GV == 2 and 50 or 15 * M.GV)
     if FloatOnCard then
@@ -1587,7 +1607,8 @@ function GAME.task_cancelAll(instant)
     end
     local list = TABLE.copy(CD, 0)
     local needFlip = {}
-    local spinMode = not instant and M.AS > 0
+    --Trevor Smithy
+    local spinMode = not instant and (M.AS > 0 or M.AS == -1)
     for i = 1, #CD do
         needFlip[i] = spinMode or CD[i].active
     end
@@ -2170,9 +2191,13 @@ function GAME.start()
 
     -- Params
     GAME.maxQuestCount = M.NH == 2 and 2 or 3
-    GAME.maxQuestSize = (M.NH < 2 and M.DH == 2) and 3 or 4
+    -- Trevor Smithy
+    -- 1+3=4 if no rNH but rDH, 1+2=3 if no rNH but eDH, 1+1 = 2 if rNH AND eDH, 4 for anything else
+    GAME.maxQuestSize = (M.NH < 2 and M.DH == 2) and 3 or (M.NH < 2 and M.DH == -1) and 4 or (M.DH == -1) and 3 or 4
+    -- 1+(1.26)=2.26 if rNH and no DH, 1+(1+2.42-1)=3.42 if rNH and DH, 1+(1+2.42-2)=2.42 if rNH and rDH, 1+0.26=1.26 if DH, 0 if no DH
     GAME.extraQuestBase = M.NH == 2 and (M.DH > 0 and 2.42 - M.DH or 1.26) or M.DH == 1 and 0.26 or 0
-    GAME.extraQuestVar = M.DH == 1 and .626 or 1
+    -- 1.626 if DH, 0.374 if eDH, 1 if no DH (or rDH)
+    GAME.extraQuestVar = M.DH == 1 and .626 or M.DH == -1 and -0.2 or 1
     GAME.questFavor = 0 -- Initialized in GAME.upFloor()
     GAME.dmgHeal = 2
     GAME.dmgWrong = 1

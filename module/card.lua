@@ -100,6 +100,10 @@ function Card:setActive(auto, key)
             SFX.play('combo_4', .626, 0, Tone(0))
         end
         self.charge = 0
+    -- Trevor Smithy
+    elseif M.VL == -1 then
+        SFX.play('combo_4', .626, 0, Tone(0))
+        self.charge = 0
     end
 
     if GAME.currentTask then
@@ -133,7 +137,8 @@ function Card:setActive(auto, key)
             end
             if self.touchCount == 1 then
                 if (self.required or self.required2) and not GAME.hardMode then
-                    GAME.addXP(M.VL == 1 and 2 or 1)
+                    -- Trevor Smithy
+                    GAME.addXP(M.VL == 1 and 2 or M.VL == -1 and 2 or 1)
                 end
             elseif not GAME.fault and not self.burn then
                 GAME.fault = true
@@ -172,7 +177,7 @@ function Card:setActive(auto, key)
     else
         TASK.unlock('cannotStart')
         -- Trevor Smithy
-        --easyOn = self.active and (key == 3 or KBIsDown('lalt', 'ralt'))
+        easyOn = self.active and (key == 3 or KBIsDown('lalt', 'ralt'))
         --
         revOn = self.active and (key == 2 or KBIsDown('lctrl', 'rctrl'))
         if revOn and completion[self.id] == 0 then
@@ -185,9 +190,10 @@ function Card:setActive(auto, key)
             return
         end
         local wasRev = M[self.id] == 2
-        M[self.id] = self.active and (revOn and 2 or 1) or 0
+        local wasEasy = M[self.id] == -1
+        --M[self.id] = self.active and (revOn and 2 or 1) or 0
         -- Trevor Smithy TODO FIX PLZ
-        --M[self.id] = self.active and (revOn and 2 or easyOn and -1 or 1) or 0
+        M[self.id] = self.active and (revOn and 2 or easyOn and -1 or 1) or 0
         --
 
         -- if revOn then -- Limit only one Rev mod can be selected
@@ -206,6 +212,7 @@ function Card:setActive(auto, key)
         TASK.removeTask_code(task_refreshBGM)
         TASK.new(task_refreshBGM)
         if wasRev and not revOn then self:spin() end
+        -- Trevor Smithy
         if self.id == 'EX' then
             TWEEN.new(tween_expertOn):setDuration(M.EX > 0 and .26 or .1):run()
             TABLE.clear(HoldingButtons)
@@ -213,6 +220,19 @@ function Card:setActive(auto, key)
             for _, C in ipairs(CD) do C:flip() end
             noSpin = M.IN == 1
         end
+        -- Trevor Smithy
+        if easyOn or wasEasy then GAME.refreshEasy() end
+        TASK.removeTask_code(task_refreshBGM)
+        TASK.new(task_refreshBGM)
+        if wasEasy and not easyOn then self:spin() end
+        --if self.id == 'EX' then
+        --    TWEEN.new(tween_expertOn):setDuration(M.EX > 0 and .26 or .1):run()
+        --    TABLE.clear(HoldingButtons)
+        --elseif self.id == 'IN' then
+        --    for _, C in ipairs(CD) do C:flip() end
+        --    noSpin = M.IN == 1
+        --end
+        --
         SCN.scenes.tower.widgetList.reset:setVisible(not GAME.zenithTraveler)
         GAME.hardMode = M.EX > 0 or GAME.anyRev and not URM
         GAME.refreshPBText()

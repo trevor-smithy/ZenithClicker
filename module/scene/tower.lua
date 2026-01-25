@@ -118,6 +118,25 @@ local function keyTrigger(key)
             end
             if not GAME.achv_noKeyboardH then GAME.achv_noKeyboardH = GAME.roundHeight end
         end
+    -- Trevor Smithy
+    elseif bindID and bindID <= 18 and (M.AS == -1 or (not GAME.playing and (bindID == 8 or bindID == 17))) then
+        if bindID > 9 then bindID = bindID - 9 end
+        local C = Cards[bindID]
+        if C then
+            if GAME.playing or not C.lock then
+                GAME.nixPrompt('keep_no_keyboard')
+                FloatOnCard = bindID
+                SetMouseVisible(false)
+                MX, MY = C.x + math.random(-126, 126), C.y + math.random(-260, 260)
+                C:setActive()
+                GAME.refreshLayout()
+            else
+                C:flick()
+                SFX.play('no')
+            end
+            if not GAME.achv_noKeyboardH then GAME.achv_noKeyboardH = GAME.roundHeight end
+        end
+    --
     else
         if key == 'escape' then
             if not GAME.playing then
@@ -304,7 +323,9 @@ function scene.mouseDown(x, y, k)
     HoldingButtons['mouse' .. k] = true
     GAME.nixPrompt('keep_no_mouse')
 
-    if getBtnPressed() > 1 + (URM and M.VL == 2 and 0 or floor(M.VL / 2)) then return true end
+    -- Trevor Smithy
+    --if getBtnPressed() > 1 + (URM and M.VL == 2 and 0 or floor(M.VL / 2)) then return true end
+    if getBtnPressed() > 1 + (URM and M.VL == 2 and 0 or M.VL == -1 and 0 or floor(M.VL / 2)) then return true end
     if M.EX == 0 then
         SFX.play('move')
         mouseTrigger(x, y, k)
@@ -321,7 +342,8 @@ function scene.mouseUp(x, y, k)
     GAME.nixPrompt('keep_no_mouse')
     if k == 3 then return end
 
-    if getBtnPressed() > (URM and M.VL == 2 and 0 or floor(M.VL / 2)) then return end
+    --if getBtnPressed() > 1 + (URM and M.VL == 2 and 0 or floor(M.VL / 2)) then return end
+    if getBtnPressed() > (URM and M.VL == 2 and 0 or M.VL == -1 and 0 or floor(M.VL / 2)) then return end
     if M.EX > 0 then
         mouseTrigger(x, y, k)
     end
@@ -1345,6 +1367,13 @@ function scene.overDraw()
                     'full', 2, COLOR.dW, URM and COLOR.D or COLOR.W,
                     (URM and MD.ultraDesc or MD.revDesc)[infoID], 260, -68, 2600, 'center', 0, .8, 1
                 )
+                -- Trevor Smithy
+            elseif M[infoID] == -1 then
+                setFont(70)
+                gc_strokePrint('full', 3, ShadeColor, TextColor, MD.easyName[infoID], 130, -150, 2600, 'center', 0, .9, 1)
+                setFont(30)
+                gc_strokePrint('full', 2, ShadeColor, TextColor, MD.easyDesc[infoID], 260, -73, 2600, 'center', 0, .8, 1)
+                --
             else
                 setFont(70)
                 gc_strokePrint('full', 3, ShadeColor, TextColor, MD.fullName[infoID], 130, -150, 2600, 'center', 0, .9, 1)
@@ -1525,6 +1554,9 @@ local function button_start()
 end
 local function button_reset()
     if M.AS == 0 then GAME.nixPrompt('keep_no_reset') end
+    -- Trevor Smithy
+    if M.AS == -1 then GAME.nixPrompt('keep_no_reset') end
+    --
     GAME.cancelAll()
     if UsingTouch then
         FloatOnCard = nil
