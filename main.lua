@@ -583,7 +583,7 @@ BEST = {
 }
 
 STAT = {
-    mod = 'vanilla',
+    mod = 'easyMode',
     version = nil, -- will be set after loading
     system = SYSTEM,
     joinDate = os.date("%b %Y"),
