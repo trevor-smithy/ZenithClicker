@@ -22,6 +22,7 @@ RevUnlocked = false
 UsingTouch = MOBILE
 local usingTouch = UsingTouch
 local revHold = {}
+local easyHold = {}
 
 ---@type Zenitha.Scene
 local scene = {}
@@ -370,8 +371,12 @@ function scene.touchDown(x, y, id)
     end
     if GAME.zenithTraveler then return end
     local x1, y1 = SCR.xOy_dl:inverseTransformPoint(SCR.xOy:transformPoint(x, y))
-    if not GAME.playing and x1 <= 200 and MATH.between(y1, -600, -40) then
+    if not GAME.playing and x1 <= 200 and MATH.between(y1, -300, -40) then -- was -600
         revHold[id] = true
+        return
+    end
+    if not GAME.playing and x1 <= 200 and MATH.between(y1, -600, -340) then -- was -600
+        easyHold[id] = true
         return
     end
 
@@ -379,6 +384,8 @@ function scene.touchDown(x, y, id)
     if M.EX <= 0 then
         SFX.play('move')
         mouseTrigger(x, y, next(revHold) and 2 or 1)
+        -- Trevor Smithy
+        mouseTrigger(x, y, next(easyHold) and 2 or 1)
     else
         SFX.play('rotate')
         -- scene.mouseMove(x, y, 0, 0)
@@ -390,10 +397,17 @@ function scene.touchUp(x, y, id)
         revHold[id] = nil
         return
     end
+    -- Trevor Smithy
+    if easyHold[id] then
+        easyHold[id] = nil
+        return
+    end
+    --
     if not HoldingButtons['touch' .. tostring(id)] then return end
     HoldingButtons['touch' .. tostring(id)] = nil
     if M.EX > 0 then
         mouseTrigger(x, y, next(revHold) and 2 or 1)
+        mouseTrigger(x, y, next(easyHold) and 2 or 1)
     end
 end
 

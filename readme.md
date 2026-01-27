@@ -1,4 +1,4 @@
-# Zenith Clicker
+# Zenith Clicker Easy Mode
 
     Welcome to Zenith Clicker, where the goal is to select required Tarot cards and send players to scale the tower.  
     As you keep climbing, more tricky players will come!  
@@ -15,6 +15,7 @@ Powered by LÖVE & Zenitha & Lua ~~instead of slow web engine~~
 
 Credits:  
 **MrZ**: Programming, game design, general development  
+**Trevor Smithy**: Easy Mode Programmer, general development, extra music
 **CreepercraftYT**: Mod Icons & Card Art  
 **DJ Asriel**: Background reconstruction  
 **Flowerling & MattMayuga**: Text Revision  
@@ -45,22 +46,46 @@ Each mod creates a unique experience by twisting the rules, but also increases t
 - All actions happen on button **release** instead of button press.
 - AS keyboard hints are not shown (if enabled).
 
+### Easy (`eEX`)
+
+- Climb speed **decays 33% slower.**
+- Quests are **more likely to repeat.**
+- Fatigue effects start **1 minute later.**
+- AS keyboard hints **ARE** shown (if enabled).
+
 ### No Hold (`NH`)
 
 - You cannot manually deselect cards.
+
+### Less Hold (`eNH`)
+
+- Cards must be pressed **twice** to deactivate. **(CURRENTLY NOT IMPLEMENTED)**
 
 ### Messiness (`MS`)
 
 - Cards are **lightly shuffled** at the start of **floors 1, 2, 5, and 8**. The cards will always be in or adjacent to their correct position.
 
+### Mixup (`eMS`)
+
+- Cards are **lightly shuffled** at the start of **floors 1 and 10.** The cards will always be in or adjacent to their correct position. **(CURRENTLY NOT IMPLEMENTED)**
+
 ### Gravity (`GV`)
 
 - **Automatically commit** some time after the first card flip. The timer starts at **9s** at floor 1, and decreases every floor until **4s** at floor 10. The timer will also automatically start if you flip no cards for 2.6s.
+
+### Float (`eGV`)
+
+- **Automatically commit** some time after the first card flip. The timer starts at **10s** at floor 1, and decreases every floor until **5s** at floor 10. **(CURRENTLY NOT IMPLEMENTED)**
 
 ### Volatility (`VL`)
 
 - Cards are **20px (18%)** further apart.
 - Cards must be pressed **twice** to activate, but deactivating still takes a single press.
+
+### Tranquility (`eVL`)
+
+- Cards are **20px (18%)** further apart.
+- XP gain **increased by 1.**
 
 ### Double Hole (`DH`)
 
@@ -68,11 +93,22 @@ Each mod creates a unique experience by twisting the rules, but also increases t
 - Quests can sometimes be slightly shuffled.
 - TODO: add specifics to difficulty change
 
+### Patched Hole (`eDH`)
+
+- Quests are **easier.**
+- Maximum quest size **reduced by 1.** (until final fatigue effect)
+
 ### Invisible (`IN`)
 
 - All cards are **face down**.
 - Quest colours are desaturated.
-- Quest hints are only shown for a moment **every two seconds**..
+- Quest hints are only shown for a moment **every two seconds.**
+
+### Visible (`eIN`)
+
+- All cards are **face down.**
+- Quest colours are desaturated **if they contain multiple cards.**
+- Quest hints are **always shown.** **(CURRENTLY NOT IMPLEMENTED)**
 
 ### All-Spin (`AS`)
 
@@ -80,12 +116,22 @@ Each mod creates a unique experience by twisting the rules, but also increases t
 - The RESET button is replaced with **SPIN**. Using SPIN quickly flips all cards one-by-one.
 - Flipping a card will apply a **burn** to it, indicated by it flashing yellow. Burns last **3s** and this duration increases by **0.5s per floor**. They can be removed by committing (even if the selected card is a wrong one) or pressing SPIN. Flipping a burned card will cause you to get **wounded**, force-flipping two cards. These cards do *not* get a Burn.
 
+### Spin (`eAS`)
+
+- You can flip cards with your keyboard: on ANSI QWERTY layout, the inputs are 1-9, Q-O, or A-L. If cards are shuffled by `(r)MS`, they are flipped based on their *position*, not by which card they are.
+- The RESET button is replaced with **SPIN**. Using SPIN quickly flips all cards one-by-one.
+
 ### Duo (`DP`)
 
 - There are two "players" instead of one. You can swap players by activating the Duo card, or by completing the second quest in the queue (the cards will be highlighted pink while you do this).
 - If one player is incapacitated, your ascension is halved and quests becomes harder, but they can be revived by completing some revive prompts.
 - Quests are a bit harder.
-- TODO: specifics on tasks
+
+### Friend (`eDP`)
+
+- There are two "players" instead of one. You can swap players by activating the Duo card, or by completing the second quest in the queue (the cards will be highlighted pink while you do this).
+- Revives are a bit easier.
+- Fatigue effects allow for greater healing. **(CURRENTLY NOT IMPLEMENTED)**
 
 ## SPOILERS
 

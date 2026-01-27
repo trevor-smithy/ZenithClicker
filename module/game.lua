@@ -452,7 +452,9 @@ function GAME.getComboName(list, mode)
             if cmbID:count('r') >= 2 then
                 local mp = GAME.getComboMP(list)
                 if mp >= 8 then return RevSwampName[min(mp, #RevSwampName)] end
-            else
+            -- Trevor Smithy
+            elseif cmbID:count('e') == 0 then
+            --
                 local len_noDP = len - (TABLE.find(list, 'DP') and 1 or 0)
                 if len_noDP >= 7 then
                     return
@@ -919,7 +921,7 @@ function GAME.startTeraAnim()
     TASK.removeTask_code(GAME.task_gigaspeed)
     TASK.new(GAME.task_gigaspeed)
     SFX.play('zenith_speedrun_start')
-    if M.EX == -1 and M.AS == -1 and M.VL == -1 and GAME.efastLeak then
+    if M.EX == -1 and M.AS == -1 and M.VL == -1 and GAME.efastLeak and M.NH == 0 and M.MS == 0 and M.GV == 0 and M.DP == 0 then
         PlayBGM('terae', true)
     else
         PlayBGM('tera', true)
