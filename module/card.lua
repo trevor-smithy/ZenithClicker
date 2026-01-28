@@ -150,7 +150,8 @@ function Card:setActive(auto, key)
             end
         end
         if not auto then
-            if M.GV > 0 and not GAME.gravTimer then
+            -- Trevor Smithy
+            if M.GV ~= 0 and not GAME.gravTimer then
                 GAME.gravTimer = GAME.gravDelay
             end
             if M.AS > 0 then
@@ -249,7 +250,7 @@ function Card:setActive(auto, key)
     if self.active then
         local postfix = revOn and '_reverse' or ''
         SFX.play(
-            GAME.glassCard and 'harddrop' or 'card_select' .. postfix, 1, 0,
+            GAME.glassCard or GAME.eglassCard and 'harddrop' or 'card_select' .. postfix, 1, 0,
             key and clampInterpolate(-200, -4.2, 200, 4.2, self.y - MY) or MATH.rand(-2.6, 2.6)
         )
         local toneName = 'card_tone_' .. ModData.name[self.id]
@@ -585,7 +586,7 @@ function Card:draw()
         end
     end
 
-    if GAME.glassCard then
+    if GAME.glassCard or GAME.eglassCard then
         local w, h = 240, 330
         gc_setColor((faceUp and ModData.textColor or ModData.color)[self.id])
         gc_setAlpha((STAT.cardBrightness / 100) ^ 2 * .872)
@@ -722,7 +723,7 @@ function Card:draw()
 
     -- Icon cover
     if faceUp then
-        gc_setColor((GAME.glassCard and ModData.color or ModData.textColor)[self.id])
+        gc_setColor(((GAME.glassCard or GAME.eglassCard) and ModData.color or ModData.textColor)[self.id])
         local active = playing and self.inLastCommit or not playing and self.active
         if M.EX <= 0 then
             if active then

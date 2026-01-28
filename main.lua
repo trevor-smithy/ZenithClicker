@@ -1051,7 +1051,7 @@ end
 
 function RefreshBGM(mode)
     if not BGM.isPlaying() then return end
-    local pitch = M.GV > 0 and 2 ^ ((URM and M.GV == 2 and 3 or M.GV) / 12) or 1
+    local pitch = M.GV > 0 and 2 ^ ((URM and M.GV == 2 and 3 or M.GV) / 12) or M.GV < 0 and 0.667 or 1
     if GAME.slowmo then pitch = pitch / 2 end
     if GAME.nightcore then pitch = pitch * 2 end
     -- Trevor Smithy

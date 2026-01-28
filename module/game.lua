@@ -921,7 +921,7 @@ function GAME.startTeraAnim()
     TASK.removeTask_code(GAME.task_gigaspeed)
     TASK.new(GAME.task_gigaspeed)
     SFX.play('zenith_speedrun_start')
-    if M.EX == -1 and M.AS == -1 and M.VL == -1 and GAME.efastLeak and M.NH == 0 and M.MS == 0 and M.GV == 0 and M.DP == 0 then
+    if M.EX == -1 and M.AS == -1 and M.VL == -1 and GAME.efastLeak and M.NH == 0 and M.MS == 0 and M.GV <= 0 and M.DH <= 0 and M.IN <= 0 and M.DP == 0 then
         PlayBGM('terae', true)
     else
         PlayBGM('tera', true)
@@ -1029,6 +1029,8 @@ function GAME.upFloor()
             - (M.MS ~= 0 and 25 or 0)
             - GAME.floor * 3
         )
+        -- Trevor Smithy
+    if M.GV == -1 then GAME.gravDelay = GravityTimer[3][GAME.floor] end
     if M.GV > 0 then GAME.gravDelay = GravityTimer[M.GV][GAME.floor] end
     local F = Floors[GAME.floor]
     local e = F.event
@@ -1159,6 +1161,8 @@ function GAME.downFloor()
             - (M.MS ~= 0 and 25 or 0)
             - GAME.negFloor * 3
         )
+    -- Trevor Smithy
+    if M.GV == -1 then GAME.gravDelay = GravityTimer[3][GAME.negFloor] end
     if M.GV > 0 then GAME.gravDelay = GravityTimer[M.GV][GAME.negFloor] end
 
     -- Text & SFX
@@ -1991,8 +1995,11 @@ function GAME.commit(auto)
         GAME.totalAttack = GAME.totalAttack + attack
         GAME.totalSurge = GAME.totalSurge + surge
 
+        local attackMulMod = 1
+        if GAME.eglassCard then attackMulMod = 0.5 end
+
         if GAME.DPlock then attack = min(attack, URM and oldAllyLife * 2.6 or oldAllyLife * 4) end
-        if attack > 0 then GAME.addHeight(attack * GAME.attackMul) end
+        if attack > 0 then GAME.addHeight(attack * GAME.attackMul * attackMulMod) end
         GAME.addXP(attack + xp)
 
         -- rMS little shuffle
@@ -2094,8 +2101,8 @@ function GAME.commit(auto)
         GAME.takeDamage(max(GAME.dmgWrong + GAME.dmgWrongExtra, 1), 'wrong')
         if not GAME.playing then return end
         GAME.dmgWrongExtra = GAME.dmgWrongExtra + .5
-
-        if M.GV > 0 then GAME.gravTimer = GAME.gravDelay end
+        -- Trevor Smithy
+        if M.GV ~= 0 then GAME.gravTimer = GAME.gravDelay end
         if M.EX > 0 then
             if M.NH < 2 then GAME.cancelAll(true) end
         elseif M.AS == 1 then
@@ -2891,12 +2898,17 @@ function GAME.update(dt)
     end
 
     -- Timers
-    GAME.time = GAME.time + dt * GAME.timerMul
+    -- Trevor Smithy
+    local timerMulMod = 1
+    if GAME.eslowmo then timerMulMod = 0.5 end
+
+    GAME.time = GAME.time + dt * (GAME.timerMul * timerMulMod)
     local r = min(GAME.rank, 26)
     GAME.rankTimer[r] = GAME.rankTimer[r] + dt
     GAME.questTime = GAME.questTime + dt
     GAME.floorTime = GAME.floorTime + dt
-    if M.GV > 0 and not GAME.gravTimer and (URM and M.GV == 2 or GAME.questTime >= 2.6) and GAME.questTime - dt < 2.6 then
+    -- Trevor Smithy
+    if M.GV ~= 0 and not GAME.gravTimer and (URM and M.GV == 2 or M.GV > 0 and GAME.questTime >= 2.6) and GAME.questTime - dt < 2.6 then
         GAME.gravTimer = GAME.gravDelay
     end
     if M.EX == 2 and GAME.floorTime > 30 then
@@ -2932,6 +2944,14 @@ function GAME.update(dt)
     end
 
     -- Height change
+    -- Trevor Smithy
+    local passiveClimbSpeedMod = 1
+    if GAME.enightcore then 
+        passiveClimbSpeedMod = 2 
+    elseif GAME.eglassCard then
+        passiveClimbSpeedMod = 8
+    end
+
     local releaseHeight = GAME.heightBuffer
     GAME.heightBuffer = max(MATH.expApproach(GAME.heightBuffer, 0, dt * 6.3216), GAME.heightBuffer - 600 * dt)
     releaseHeight = releaseHeight - GAME.heightBuffer
@@ -2960,7 +2980,7 @@ function GAME.update(dt)
                 if GAME.height < NegEvents[GAME.negEvent].h then GAME.nextNegEvent() end
             end
         else
-            GAME.height = GAME.height + GAME.rank / 4 * dt * icLerp(1, 6, Floors[GAME.floor].top - GAME.height)
+            GAME.height = GAME.height + GAME.rank / 4 * passiveClimbSpeedMod * dt * icLerp(1, 6, Floors[GAME.floor].top - GAME.height)
         end
     end
 
@@ -3004,8 +3024,15 @@ function GAME.update(dt)
     end
 
     -- Gravity
-    if M.GV > 0 and GAME.gravTimer then
-        GAME.gravTimer = GAME.gravTimer - dt
+    -- Trevor Smithy
+    local gravTimerMod = 1 -- larger = slower, smaller = faster
+    if GAME.eslowmo then
+        gravTimerMod = 2
+    elseif GAME.enightcore then
+        gravTimerMod = 0.5
+    end
+    if M.GV ~= 0 and GAME.gravTimer then
+        GAME.gravTimer = GAME.gravTimer - dt / gravTimerMod
         if GAME.gravTimer <= 0 then
             GAME.faultWrong = false
             GAME.commit(true)
@@ -3031,7 +3058,14 @@ function GAME.update(dt)
     end
 
     -- Damage
-    GAME.dmgTimer = GAME.dmgTimer - dt / GAME.dmgTimerMul
+    -- Trevor Smithy
+    local dmgTimerMulMod = 1
+    if M.GV == -1 and GAME.eslowmo then 
+        dmgTimerMulMod = 1.5
+    elseif M.GV == -1 or GAME.eslowmo then
+        dmgTimerMulMod = 1.25
+    end
+    GAME.dmgTimer = GAME.dmgTimer - dt / (GAME.dmgTimerMul * dmgTimerMulMod)
     if GAME.dmgTimer <= 0 then
         GAME.dmgTimer = GAME.dmgCycle
         GAME.takeDamage(GAME.dmgTime, 'time')

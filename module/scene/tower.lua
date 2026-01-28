@@ -1089,7 +1089,7 @@ function scene.overDraw()
             gc_rectangle('line', 390, 430, w, -20 - 2 * delay)
 
             -- Gravity Timer
-            if M.GV > 0 then
+            if M.GV ~= 0 then
                 gc_push('transform')
                 gc_translate(1300, 270)
                 gc_scale(GAME.uiHide)
@@ -1275,7 +1275,15 @@ function scene.overDraw()
             gc_setColor(COLOR.S)
             gc_setAlpha(next(revHold) and .42 or .26)
         end
-        gc_draw(TEXTURE.transition, -200 * GAME.uiHide, -40, 0, 200 / 128, -560)
+        gc_draw(TEXTURE.transition, -200 * GAME.uiHide, -40, 0, 200 / 128, -300)
+    end
+
+    -- Easy trigger for touchscreen Trevor Smithy
+    if usingTouch and not GAME.playing then
+        gc_replaceTransform(SCR.xOy_dl)
+        gc_setColor(0, 1, 0)
+        gc_setAlpha(next(easyHold) and .42 or .26)
+        gc_draw(TEXTURE.transition, -200 * GAME.uiHide, -340, 0, 200 / 128, -560)
     end
 
     -- Cards

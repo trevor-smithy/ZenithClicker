@@ -75,7 +75,8 @@ Each mod creates a unique experience by twisting the rules, but also increases t
 
 ### Float (`eGV`)
 
-- **Automatically commit** some time after the first card flip. The timer starts at **10s** at floor 1, and decreases every floor until **5s** at floor 10. **(CURRENTLY NOT IMPLEMENTED)**
+- **Automatically commit** some time after the first card flip. The timer starts at **10s** at floor 1, and decreases every floor until **5s** at floor 10.
+- Damage timer is **25% slower.**
 
 ### Volatility (`VL`)
 
