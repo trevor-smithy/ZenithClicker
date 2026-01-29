@@ -23,6 +23,9 @@ UsingTouch = MOBILE
 local usingTouch = UsingTouch
 local revHold = {}
 local easyHold = {}
+local startHour = os.date('%H')
+local startMin = os.date('%M')
+local startSec = os.date('%S')
 
 ---@type Zenitha.Scene
 local scene = {}
@@ -1474,42 +1477,60 @@ function scene.overDraw()
     end
 
     -- Trevor Smithy
-    -- TimeMul
+    local gravityMod = 1
+    if M.GV == 2 and URM then
+        gravityMod = 2 ^ (3/12)
+    elseif M.GV == 2 then
+        gravityMod = 2 ^ (2/12)
+    elseif M.GV == 1 then
+        gravityMod = 2 ^ (1/12)
+    elseif M.GV == -1 then
+        gravityMod = 2/3
+    end
+    local clockMod = 9.57
+    -- ClockEffect
     if GAME.enightcore or GAME.eslowmo then
         gc_replaceTransform(SCR.xOy_m)
         gc_rotate(-1.5708)
         gc_setLineWidth(42)
-        local a
+        local a = love.timer.getTime()
+        -- goal is for all hands to complete a revolution at *gravityMod* rate
+        local h = a*gravityMod/(3600*clockMod) + startHour/6 * 3.1416
+        local m = a*gravityMod/(60*clockMod) + startMin/30 * 3.1416
+        local s = a*gravityMod/clockMod + startSec/30 * 3.1416
+        local o = a*gravityMod*(184/4)/clockMod -- 184 rotations per minute
+        local x = a*gravityMod*(240/4)/clockMod -- 240 rotations per minute
+        --love.graphics.print("startHour" .. startHour, 0, 0, 1.57, 1, 1, 0, 0)
         if GAME.enightcore then
             gc_setColor(1, 1, 1, GAME.playing and .1 or .26)
             gc_circle('line', 0, 0, 620)
             gc_setColor(1, 1, 1, GAME.playing and .26 or .42)
-            a = os.date('%H') / 6 * 3.1416
+            --a = os.date('%H') / 6 * 3.1416
             gc_setLineWidth(26)
-            gc_line(0, 0, 120 * cos(a), 120 * sin(a))
-            a = os.date('%M') / 30 * 3.1416
+            gc_line(0, 0, 120 * cos(h), 120 * sin(h))
+            --a = os.date('%M') / 30 * 3.1416
             gc_setLineWidth(16)
-            gc_line(0, 0, 260 * cos(a), 260 * sin(a))
-            a = os.date('%S') / 30 * 3.1416
+            gc_line(0, 0, 260 * cos(m), 260 * sin(m))
+            --a = os.date('%S') / 30 * 3.1416
             gc_setLineWidth(10)
-            gc_line(0, 0, 420 * cos(a), 420 * sin(a))
-            a = love.timer.getTime() / 30 * 3.1416 * 26
-            gc_line(0, 0, 520 * cos(a), 520 * sin(a))
-            a = love.timer.getTime() / 30 * 3.1416 * 60
-            gc_line(0, 0, 600 * cos(a), 600 * sin(a))
+            gc_line(0, 0, 420 * cos(s), 420 * sin(s))
+            --a = love.timer.getTime() / 30 * 3.1416 * 26
+            gc_line(0, 0, 520 * cos(o), 520 * sin(o))
+            --a = love.timer.getTime() / 30 * 3.1416 * 60
+            gc_line(0, 0, 600 * cos(x), 600 * sin(x))
         else
             gc_setColor(1, 1, 1, GAME.playing and .0626 or .1)
             gc_circle('line', 0, 0, 620)
             gc_setColor(1, 1, 1, GAME.playing and .1 or .26)
-            a = os.date('%H') / 6 * 3.1416
+            --a = os.date('%H') / 6 * 3.1416
             gc_setLineWidth(26)
-            gc_line(0, 0, 120 * cos(a), 120 * sin(a))
-            a = os.date('%M') / 30 * 3.1416
+            gc_line(0, 0, 120 * cos(h), 120 * sin(h))
+            --a = os.date('%M') / 30 * 3.1416
             gc_setLineWidth(16)
-            gc_line(0, 0, 260 * cos(a), 260 * sin(a))
-            a = os.date('%S') / 30 * 3.1416
+            gc_line(0, 0, 260 * cos(m), 260 * sin(m))
+            --a = os.date('%S') / 30 * 3.1416
             gc_setLineWidth(10)
-            gc_line(0, 0, 420 * cos(a), 420 * sin(a))
+            gc_line(0, 0, 420 * cos(s), 420 * sin(s))
         end
     end
     --

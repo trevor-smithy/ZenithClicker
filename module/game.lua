@@ -1064,6 +1064,7 @@ function GAME.upFloor()
             GAME.setGigaspeedAnim(false)
             if GAME.teramusic then IssueAchv('blazing_speed') end
             if GAME.teramusic and M.EX == -1 and M.VL == -1 and M.AS == -1 and GAME.efastLeak then IssueAchv('programmer_gamer') end
+            if GAME.teramusic and M.EX == -1 and M.GV == 2 and URM and M.DH == -1 and GAME.enightcore and (not GAME.achv_noManualCommitH or GAME.achv_noManualCommitH >= 1650) then IssueAchv("one_of_mine") end
             GAME.stopTeraspeed('f10')
 
             local setStr = (GAME.anyUltra and 'u' or '') .. GAME.comboStr

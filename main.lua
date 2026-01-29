@@ -287,6 +287,7 @@ TEXTURE = {
             empurple = aq(13, 7),
             faltered = aq(15, 6),
             patience_is_a_virtue = aq(10, 6),
+            one_of_mine = aq(10, 6),
             spotless = aq(16, 4),
             a_mutual_agreement = aq(13, 4),
             the_cheaters = aq(12, 4),
